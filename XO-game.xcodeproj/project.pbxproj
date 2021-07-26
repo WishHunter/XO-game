@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5807206A26AE8B7D00344A05 /* FiveGameInvoker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807206926AE8B7D00344A05 /* FiveGameInvoker.swift */; };
 		BA1029B826A5EB140095B113 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1029B726A5EB140095B113 /* GameState.swift */; };
 		BA1029BA26A5EB690095B113 /* GameEndState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1029B926A5EB690095B113 /* GameEndState.swift */; };
 		BA1029BC26A5ED3A0095B113 /* PlayerGameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1029BB26A5ED3A0095B113 /* PlayerGameState.swift */; };
@@ -37,6 +38,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5807206926AE8B7D00344A05 /* FiveGameInvoker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiveGameInvoker.swift; sourceTree = "<group>"; };
 		BA1029B726A5EB140095B113 /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
 		BA1029B926A5EB690095B113 /* GameEndState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEndState.swift; sourceTree = "<group>"; };
 		BA1029BB26A5ED3A0095B113 /* PlayerGameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerGameState.swift; sourceTree = "<group>"; };
@@ -164,6 +166,7 @@
 			isa = PBXGroup;
 			children = (
 				CE69B62526ADE918008F4EEC /* FivesGameCommand.swift */,
+				5807206926AE8B7D00344A05 /* FiveGameInvoker.swift */,
 			);
 			path = FivesGame;
 			sourceTree = "<group>";
@@ -305,6 +308,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5807206A26AE8B7D00344A05 /* FiveGameInvoker.swift in Sources */,
 				F874E4732224621100364CAE /* GameViewController.swift in Sources */,
 				BA1029C826A6039B0095B113 /* LogInvoker.swift in Sources */,
 				F874E4DD2225C25D00364CAE /* GameboardPosition.swift in Sources */,

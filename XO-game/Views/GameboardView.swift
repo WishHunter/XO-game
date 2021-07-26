@@ -57,7 +57,7 @@ public class GameboardView: UIView {
         guard let markView = markViewForPosition[position] else {
             return
         }
-        markViewForPosition[position] = nil
+        markViewForPosition.removeValue(forKey: position)
         markView.removeFromSuperview()
     }
     

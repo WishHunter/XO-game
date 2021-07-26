@@ -19,40 +19,33 @@ class GameViewController: UIViewController {
     public var gameBoard = Gameboard()
     private lazy var referee = Referee(gameboard: gameBoard)
     
+    private let fiveGame: FiveGameInvoker = FiveGameInvoker()
+    private var activePlayer: Player = .first
+    
     private var currentState: GameState! {
         didSet {
             currentState.begin()
         }
     }
     
-    private var states: [FivesGameCommand] = []
-    private let bufferStates = 5
-    private var queuePlayer = firstPlayerTurn
-    private var activePlayer: Player = .first
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        addStatesCommand(state: FivesGameCommand(position: <#T##GameboardPosition#>, markViewPrototype: <#T##MarkView#>))
-        
-//        firstPlayerTurn()
-        
-        
-//        gameboardView.onSelectPosition = { [weak self] position in
-//            guard let self = self else { return }
-//
-//            self.currentState.addSign(at: position)
-//            if self.currentState.isMoveCompleted {
-//                self.nextPlayerTurn()
-//            }
-//        }
-        
         firstPlayerTurn()
         
         gameboardView.onSelectPosition = { [weak self] position in
             guard let self = self else { return }
-            
+            self.step(position: position)
+        }
+    }
+    
+    func step(position: GameboardPosition) {
+        switch GameSingleton.share.typeGame {
+        case .classic:
+            self.currentState.addSign(at: position)
+            if self.currentState.isMoveCompleted {
+                self.nextPlayerTurn()
+            }
+        case .experimental:
             self.currentState = PlayerGameState(player: self.activePlayer, gameViewControler: self,
                                                 gameBoard: self.gameBoard,
                                                 gameboardView: self.gameboardView,
@@ -60,26 +53,23 @@ class GameViewController: UIViewController {
             
             self.currentState.addSign(at: position)
             
-            self.addStatesCommand(state: FivesGameCommand(position: position, markViewPrototype: self.activePlayer.markViewPrototype))
+            self.fiveGame.addStatesCommand(state: FivesGameCommand(position: position, markViewPrototype: self.activePlayer.markViewPrototype))
+            self.execute()
         }
     }
     
-    func addStatesCommand(state: FivesGameCommand) {
-        states.append(state)
-        execute()
-    }
     
     func execute() {
-        guard states.count >= bufferStates else { return }
+        guard fiveGame.states.count >= fiveGame.bufferStates else { return }
         
-        if states.count == bufferStates {
+        if fiveGame.states.count == fiveGame.bufferStates {
             gameboardView.clear()
             nextPlayerTurn()
         }
         
         activePlayer = .second
                 
-        if states.count == bufferStates * 2 {
+        if fiveGame.states.count == fiveGame.bufferStates * 2 {
             gameboardView.clear()
             gameBoard.clear()
             
@@ -92,22 +82,28 @@ class GameViewController: UIViewController {
     
     func viewStepsGame() {
         var steps: [FivesGameCommand] = []
-        for index in 0..<5 {
-            steps.append(states[index])
-            steps.append(states[5 + index])
+        for index in 0..<fiveGame.bufferStates {
+            steps.append(fiveGame.states[index])
+            steps.append(fiveGame.states[fiveGame.bufferStates + index])
         }
                 
         steps.forEach { step in
-            sleep(1)
+            
+            // Все равно не отрисовывает последовательно(
+            // sleep(1)
+
+            if !gameboardView.canPlaceMarkView(at: step.position) {
+                gameboardView.removeMarkView(at: step.position)
+            }
+            
             self.currentState.addSign(at: step.position)
             if self.currentState.isMoveCompleted {
                 print(step.position)
                 self.nextPlayerTurn()
             }
         }
-        
-        // Остановился вот тут, рисует но не перерисовывает
     }
+    
     
     private func firstPlayerTurn() {
         let firstPlayer: Player = .first
@@ -168,6 +164,14 @@ class GameViewController: UIViewController {
         gameBoard.clear()
         
         firstPlayerTurn()
+        
+        gameboardView.onSelectPosition = { [weak self] position in
+            guard let self = self else { return }
+            self.step(position: position)
+        }
+        
+        activePlayer = .first
+        fiveGame.clear()
         
         Logger.shared.log(action: .restartGame)
     }
